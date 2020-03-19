@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--解决300ms延迟操作1-->
+    <meta name="viewport" content="user-scalable=no">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1">
+    <title>Document</title>
+    <script src="./index.js"></script>
+</head>
+
+<body>
+    <div id="app"></div>
+</body>
+<script>
+    var vue = new VueS();
+    setTimeout(function() {
+        vue.$data.name = 111;
+    }, 2000);
+</script>
+
+</html>
