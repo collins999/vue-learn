@@ -7,6 +7,7 @@ Function.prototype.myCall = function(context, ...arg) {
     const sym = Symbol('实例变量');
     context[sym] = this;
     const result = context[sym](...arg);
+    delete context[sym];
     return result;
 }
 
