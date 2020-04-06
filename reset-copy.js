@@ -50,3 +50,4 @@ Function.prototype.myBind = function(objThis, ...args) {
     }
     return func;
 }
+

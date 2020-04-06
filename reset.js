@@ -47,6 +47,7 @@ Function.prototype.myApply = function(context, arr) {
     } else {
         result = context[sym]();
     }
+    delete context[sym];
     return result;
 }
 const res1 = Array.prototype.push.myApply([], [2, 3, 5, 4]);
