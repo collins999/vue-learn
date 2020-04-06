@@ -55,14 +55,14 @@ console.log(res1);
 
 
 Function.prototype.bind = function(objThis, ...params) {
-    const thisFn = this;
+    const self = this;
     let fToBind = function(...secondParams) {
         const isNew = this instanceof fToBind;
-        const objThis = isNew ? this : Object(context);
-        return thisFn.call(objThis, ...params, ...secondParams);
-    }
-    if (thisFn.prototype) {
-        fToBind.prototype = Object.create(thisFn.prototype);
+        const content = isNew ? this : Object(self);
+        return fToBind.call(content, ...params, ...secondParams);
+    };
+    if (self.prototype) {
+        fToBind.prototype = Object.create(self.prototype);
     }
     return fToBind;
 }
@@ -79,7 +79,7 @@ function debounce(fn, wait) {
             clearTimeout(timer);
         } else {
             timer = setTimeout(() => {
-                fn.call(self, ...arg);
+                fn.call(self, ...args);
                 timer = null;
             }, wait)
         }
@@ -115,4 +115,14 @@ function throttle2(fn, wait) {
             preTime = nowTime;
         }
     }
+}
+
+// 手写new
+function myNew() {
+    let obj = new Object();
+    let constructor = Array.prototype.shift.call(arguments);
+    obj.__proto__ = constructor.prototype;
+    const ret = constructor.apply(obj, arguments);
+    // 如果构造函数执行代码返回的是一个对象，就返回这个对象，不是就返回新对象
+    return typeof ret === 'object' ? ret : obj;
 }
