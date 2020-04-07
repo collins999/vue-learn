@@ -53,20 +53,19 @@ Function.prototype.myApply = function(context, arr) {
 const res1 = Array.prototype.push.myApply([], [2, 3, 5, 4]);
 console.log(res1);
 
-
-Function.prototype.bind = function(objThis, ...params) {
+// 手写bind
+Function.prototype.myBind = function(objThis, ...params) {
     const self = this;
     let fToBind = function(...secondParams) {
         const isNew = this instanceof fToBind;
-        const content = isNew ? this : Object(self);
-        return fToBind.call(content, ...params, ...secondParams);
+        const content = isNew ? this : Object(objThis);
+        return self.call(content, ...params, ...secondParams);
     };
     if (self.prototype) {
         fToBind.prototype = Object.create(self.prototype);
     }
     return fToBind;
 }
-
 
 // 防抖
 function debounce(fn, wait) {
@@ -125,4 +124,19 @@ function myNew() {
     const ret = constructor.apply(obj, arguments);
     // 如果构造函数执行代码返回的是一个对象，就返回这个对象，不是就返回新对象
     return typeof ret === 'object' ? ret : obj;
+}
+
+//  面试题：请手写myBind，让下面代码能正常输出success
+function Animal(name, color) {
+    this.name = name;
+    this.color = color;
+}
+Animal.prototype.say = function() {
+    return `I'm a ${this.color} ${this.name}`;
+};
+const Cat = Animal.myBind(null, 'cat');
+const cat = new Cat('white');
+if (cat.say() === 'I\'m a white cat' &&
+    cat instanceof Cat && cat instanceof Animal) {
+    console.log('success');
 }
