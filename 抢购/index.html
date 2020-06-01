@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>抢购</title>
+</head>
+
+<body>
+    <div id="box">
+        <span>距离开始抢购：00:00:00</span>
+    </div>
+    <script>
+        // 倒计时抢购
+        let targetTime = new Date('2020/06/01 23:36:00').getTime(),
+            nowTime = new Date().getTime()
+        box = document.querySelector('#box'),
+            spanBox = box.querySelector('span'),
+            autoMove = null;
+        // 查询服务器事件
+        function queryServeTime() {
+            let xhr = new XMLHttpRequest();
+            xhr.open('GET', './data.json');
+            xhr.onreadystatechange = function() {
+                if (xhr.status >= 200 && xhr.status < 400) {
+                    if (xhr.readyState === 2) {
+                        nowTime = new Date(xhr.getResponseHeader('date')).getTime();
+                        computed();
+                        interval();
+                    }
+                }
+            }
+            xhr.send();
+        }
+
+        function computed() {
+            let spanTime = targetTime - nowTime;
+            if (spanTime <= 0) {
+                spanBox.innerHTML = '开始抢购吧~~~';
+                return;
+            }
+            let hours = Math.floor(spanTime / (60 * 60 * 1000));
+            spanTime = spanTime - (60 * 60 * 1000) * hours;
+            let minutes = Math.floor(spanTime / (60 * 1000));
+            spanTime = spanTime - (60 * 1000) * minutes;
+            let seconds = Math.floor(spanTime / 1000);
+            hours = `0${hours}`.slice(-2);
+            minutes = `0${minutes}`.slice(-2);
+            seconds = `0${seconds}`.slice(-2);
+            spanBox.innerHTML = `${hours}:${minutes}:${seconds}`;
+        }
+
+        function interval() {
+            autoMove = setInterval(function() {
+                nowTime += 1 * 1000;
+                computed();
+            }, 1000)
+        }
+        queryServeTime();
+    </script>
+</body>
+
+</html>

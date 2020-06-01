@@ -51,3 +51,11 @@ Function.prototype.myBind = function(objThis, ...args) {
     return func;
 }
 
+function myNew() {
+    let obj = new Object();
+    const Constructor = Array.prototype.shift.call(arguments);
+    obj.__proto__ = Constructor.prototype;
+    const ret = Constructor.call(obj, ...arguments);
+    return typeof ret === 'object' ? ret : obj;
+
+}
